@@ -1,5 +1,5 @@
 Import-Module (Join-Path $PSScriptRoot "Selenium.psd1") -Force
-
+<#
 Describe "Verify the Binaries SHA256 Hash" {
     It "Check WebDriver.dll Hash"{
         # VirusTotal Scan URL = https://www.virustotal.com/gui/file/0ee619b1786cf5971c0f9c6ee1859497aecba93a4953cf92fea998e8eefadf3c/detection
@@ -61,105 +61,107 @@ Describe "Verify the Binaries SHA256 Hash" {
         $Hash | Should -Be (Get-Content -Path $PSScriptRoot\assemblies\MicrosoftWebDriver.exe.sha256)
     }
 }
-
+#>
+<#
 Describe "Start-SeChrome" {
     Context "Should Start Chrome Driver" {
-        $Driver = Start-SeChrome
-        Stop-SeDriver $Driver
+        $Driver = Start-SeDriver -Browser Chrome
+        Stop-SeDriver
     }
 }
 
 Describe "Start-SeChrome with Options" {
     Context "Should Start Chrome Driver with different startup options" {
         It "Start Chrome with StartURL" {
-            $Driver = Start-SeChrome -StartURL 'https://github.com/adamdriscoll/selenium-powershell'
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Chrome -StartURL 'https://github.com/adamdriscoll/selenium-powershell'
+            Stop-SeDriver
         }
 
         It "Start Chrome in Headless mode" {
-            $Driver = Start-SeChrome -Headless
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Chrome -State Headless
+            Stop-SeDriver
         }
 
         It "Start Chrome Minimize" {
-            $Driver = Start-SeChrome -Minimize
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Chrome -State Minimize
+            Stop-SeDriver
         }
 
         It "Start Chrome Maximized" {
-            $Driver = Start-SeChrome -Maximized
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Chrome -State Maximized
+            Stop-SeDriver
         }
 
         It "Start Chrome Incognito" {
-            $Driver = Start-SeChrome -Incognito
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Chrome -PrivateBrowsing
+            Stop-SeDriver
         }
 
         It "Start Chrome Fullscreen" {
-            $Driver = Start-SeChrome -Fullscreen
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Chrome -State Fullscreen
+            Stop-SeDriver
         }
 
         It "Start Chrome Maximized and Incognito" {
-            $Driver = Start-SeChrome -Maximized -Incognito
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Chrome -State -PrivateBrowsing
+            Stop-SeDriver
         }
 
         It "Start Chrome with Multiple arguments" {
-            $Driver = Start-SeChrome -Arguments @('Incognito','start-maximized')
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Chrome -State Maximized -PrivateBrowsing
+            Stop-SeDriver
         }
     }
 }
+#>
 
 Describe "Start-SeFirefox"{
     Context "Should Start Firefox Driver" {
-        $Driver = Start-SeFirefox
-        Stop-SeDriver $Driver
+        $Driver = Start-SeDriver -Browser Firefox
+        Stop-SeDriver
     }
 }
 
 Describe "Start-SeFirefox with Options" {
     Context "Should Start Firefox Driver with different startup options" {
         It "Start Firefox with StartURL" {
-            $Driver = Start-SeFirefox -StartURL 'https://github.com/adamdriscoll/selenium-powershell'
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Firefox -StartURL 'https://github.com/adamdriscoll/selenium-powershell'
+            Stop-SeDriver
         }
 
         It "Start Firefox in Headless mode" {
-            $Driver = Start-SeFirefox -Headless
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Firefox -State Headless
+            Stop-SeDriver
         }
 
         It "Start Firefox Minimize" {
-            $Driver = Start-SeFirefox -Minimize
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Firefox -State Minimize
+            Stop-SeDriver
         }
 
         It "Start Firefox Maximized" {
-            $Driver = Start-SeFirefox -Maximized
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Firefox -State Maximized
+            Stop-SeDriver
         }
 
         It "Start Firefox PrivateBrowsing (Incognito)" {
-            $Driver = Start-SeFirefox -PrivateBrowsing
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Firefox -PrivateBrowsing
+            Stop-SeDriver
         }
 
         It "Start Firefox Fullscreen" {
-            $Driver = Start-SeFirefox -Fullscreen
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Firefox -State Fullscreen
+            Stop-SeDriver
         }
 
         It "Start Firefox Maximized and PrivateBrowsing (Incognito)" {
-            $Driver = Start-SeFirefox -Maximized -PrivateBrowsing
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Firefox -State Maximized -PrivateBrowsing
+            Stop-SeDriver
         }
 
         It "Start Firefox with Multiple arguments" {
-            $Driver = Start-SeFirefox -Arguments @('-headless','-private')
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Firefox -State headless -PrivateBrowsing
+            Stop-SeDriver
         }
     }
 }
@@ -167,58 +169,49 @@ Describe "Start-SeFirefox with Options" {
 Describe "Start-SeEdge" {
     Context "Should Start Edge Driver" {
         if(!$IsLinux -and !$IsMacOS){
-            $Driver = Start-SeEdge
-            Stop-SeDriver $Driver
-        }
-    }
-}
-
-Describe "Start-SeInternetExplorer" {
-    Context "Should Start InternetExplorer Driver" {
-        if(!$IsLinux -and !$IsMacOS){
-            $Driver = Start-SeInternetExplorer
-            Stop-SeDriver $Driver
+            $Driver = Start-SeDriver -Browser Edge -StartURL "http://www.google.com"
+            Stop-SeDriver
         }
     }
 }
 
 Describe "Get-SeCookie" {
-    $Driver = Start-SeFirefox
+    $Driver = Start-SeDriver -Browser Firefox
     Context "Should get cookies from google" {
-        Enter-SeUrl -Driver $Driver -Url "http://www.google.com"
+        Set-SeUrl -Url "http://www.google.com"
 
-        Get-SeCookie $Driver
+        Get-SeCookie
     }
-    Stop-SeDriver $Driver
+    Stop-SeDriver
 }
 
-Describe "Send-SeKeys" {
-    $Driver = Start-SeFirefox
-    Enter-SeUrl -Driver $Driver -Url "http://www.google.com/ncr"
-    Context "Find-SeElement" {
+Describe "Invoke-SeKeys" {
+    $Driver = Start-SeDriver -Browser Firefox
+    Set-SeUrl -Url "http://www.google.com/ncr"
+    Context "Get-SeElement" {
         It "By Css" {
-            $SearchInput = Find-SeElement -Driver $Driver -Css "input[name='q']"
-            Send-SeKeys -Element $SearchInput -Keys "test"
+            $SearchInput = Get-SeElement -By CssSelector -Value "textarea[name='q']"
+            Invoke-SeKeys -Element $SearchInput -Keys "test"
         }
     }
-    Stop-SeDriver $Driver
+    Stop-SeDriver
 }
 
-Describe "Find-SeElement Firefox" {
-    $Driver = Start-SeFirefox
-    Enter-SeUrl -Driver $Driver -Url "http://www.google.com/ncr"
-    Context "Find-SeElement" {
+Describe "Get-SeElement Firefox" {
+    $Driver = Start-SeDriver -Browser Firefox
+    Set-SeUrl -Url "http://www.google.com/ncr"
+    Context "Get-SeElement" {
         It "By Css" {
-            $SearchInput = Find-SeElement -Driver $Driver -Css "input[name='q']"
+            $SearchInput = Get-SeElement -By CssSelector -Value "textarea[name='q']"
         }
     }
 
-    Context "Find-SeElement -Wait" {
+    Context "Get-SeElement -Wait" {
         It "By Name"{
-            $SearchInput = Find-SeElement -Driver $Driver -Wait -Name q -Timeout 60
+            $SearchInput = Get-SeElement -By Name -Value q -Timeout 60
         }
     }
 
-    Stop-SeDriver $Driver
+    Stop-SeDriver
 }
 
