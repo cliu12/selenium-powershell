@@ -1,11 +1,13 @@
-$Script:ModifierKeys = @(
-    'Control',
-    'LeftControl'
-    'Alt',
-    'LeftAlt'
-    'Shift',
-    'LeftShift'
-)
+#$Script:ModifierKeys = @(
+#    'Control',
+#    'LeftControl'
+#    'Alt',
+#    'LeftAlt'
+#    'Shift',
+#    'LeftShift'
+#)
+$Script:ModifierKeys = [OpenQA.Selenium.Keys] | gm -Static | ? { $_.MemberType -eq 'Property'} | select -ExpandProperty Name
+
 function Invoke-SeKeys {
     [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(

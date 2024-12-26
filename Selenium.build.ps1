@@ -87,6 +87,7 @@ task CopyAdditionalFiles {
     & $CopyFolder 'Examples'
 
     & $CopyFile 'SeleniumClasses.ps1'
+    & $CopyFile 'SeleniumSelection.psm1'
     & $CopyFile 'Selenium-Binary-Updater.ps1'
 
     & $CopyFile 'ChangeLog.md'
