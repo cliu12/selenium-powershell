@@ -414,8 +414,13 @@ function Get-SeElement {
             'Default' { 
                 if ($Timeout) {
                     $WebDriverWait = [OpenQA.Selenium.Support.UI.WebDriverWait]::new($Driver, ([timespan]::FromMilliseconds($Timeout * 1000)))
-                    $Condition = [OpenQA.Selenium.Support.UI.ExpectedConditions]::PresenceOfAllElementsLocatedBy($ByCondition)
-                    $Output = $WebDriverWait.Until($Condition) | DisplayedFilter -All:$ShowAll
+                    $Output = $WebDriverWait.Until( [System.Func[OpenQA.Selenium.IWebDriver, OpenQA.Selenium.IWebElement]] {
+                        param($Driver)
+                        Try {
+                            $e = $Driver.FindElement($ByCondition);
+                            if($e.Displayed) {$e}
+                        } Catch { $null }
+                    })  | DisplayedFilter -All:$ShowAll
                 }
                 else {
                     if ($Single -eq $true) {
