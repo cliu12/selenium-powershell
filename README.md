@@ -3,7 +3,7 @@
 The Selenium PowerShell module allows you to automate browser interaction using the [Selenium API](https://selenium.dev/). You can navigate to pages, find elements, click buttons, enter text and even take screenshots. 
 
 # What's change
-- The is the port of Adam's Selenium-Powershell 4.0.0.0-Pre3, and make it work with WebDriver.dll 4.0 or later
+- The is the fork of Adam's Selenium-Powershell 4.0.0.0-Pre3, and make it work with WebDriver.dll 4.0 or later
 - Download the whole Output\Selenium folder
 - Update the binary files inside assemblies as needed
 - Import-Module "Selenium.psd1"
