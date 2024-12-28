@@ -26,8 +26,9 @@
         '.\Examples',
         '.\ChangeLog.md',
         '.\README.md',
-        '.\Selenium.psm1'
-        '.\Selenium.tests.ps1'
+        '.\Selenium.psm1',
+        '.\SeleniumSelection.psm1',
+        '.\Selenium.tests.ps1',
         '.\Selenium-Binary-Updater.ps1')
 
     PrivateData          = @{

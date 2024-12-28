@@ -1,5 +1,13 @@
 
-# 4.0.0-preview3 (Planned)
+# 4.0.0-preview4
+- Move SeleniumSelection class to SeleniumSelection.psm1
+- Update assemblies files the latest version
+- Get-SeElement -single will return single element by .FindElement instead of .FindElements
+- Change Selenium.build2.ps1, task to function
+- Update Selenium.tests.ps1 to updated functions
+
+
+# 4.0.0-preview3
 ## Added / Modified
 - Get-SeElementAttribute now return a hashtable instead of a pscustom object when multiple attributes are queried
 
