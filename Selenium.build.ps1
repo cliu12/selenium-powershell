@@ -1,28 +1,28 @@
-task . Clean, Build, Tests, UpdateHelp, ExportHelp, Stats
-task Tests ImportCompipledModule, Pester
-task CreateManifest CopyPSD, UpdatPublicFunctionsToExport, CopyAdditionalFiles
-task Build Compile, CreateManifest
-task Stats WriteStats
+# task . Clean, Build, Tests, UpdateHelp, ExportHelp, Stats
+# task Tests ImportCompipledModule, Pester
+# task CreateManifest CopyPSD, UpdatPublicFunctionsToExport, CopyAdditionalFiles
+# task Build Compile, CreateManifest
+# task Stats WriteStats
 
 $script:ModuleName = 'Selenium' # Split-Path -Path $PSScriptRoot -Leaf
 $script:ModuleRoot = $PSScriptRoot
 $script:OutPutFolder = "$PSScriptRoot\Output"
-$script:ModuleOutPutFolder = "$PSScriptRoot\Output\$script:ModuleName"
+$script:ModuleOutPutFolder = "$script:OutPutFolder\$script:ModuleName"
 $script:ImportFolders = @('Public', 'Internal', 'Classes')
-$script:PsmPath = Join-Path -Path $PSScriptRoot -ChildPath "Output\$($script:ModuleName)\$($script:ModuleName).psm1"
-$script:PsdPath = Join-Path -Path $PSScriptRoot -ChildPath "Output\$($script:ModuleName)\$($script:ModuleName).psd1"
-$script:HelpPath = Join-Path -Path $PSScriptRoot -ChildPath "Output\$($script:ModuleName)\en-US"
+$script:PsmPath = Join-Path -Path $script:ModuleOutPutFolder -ChildPath "$($script:ModuleName).psm1"
+$script:PsdPath = Join-Path -Path $script:ModuleOutPutFolder -ChildPath "$($script:ModuleName).psd1"
+$script:HelpPath = Join-Path -Path $script:ModuleOutPutFolder -ChildPath "$en-US"
 
 $script:PublicFolder = 'Public'
 $script:DSCResourceFolder = 'DSCResources'
 
 
-task "Clean" {
-    if (-not(Test-Path $script:OutPutFolder)) {
-        New-Item -ItemType Directory -Path $script:OutPutFolder > $null
+function Clean {
+    if (-not(Test-Path $script:ModuleOutPutFolder)) {
+        New-Item -ItemType Directory -Path $script:ModuleOutPutFolder > $null
     }
 
-    Remove-Item -Path "$($script:OutPutFolder)\*" -Force -Recurse
+    Remove-Item -Path "$($script:ModuleOutPutFolder)\*" -Force -Recurse
 }
 
 $compileParams = @{
@@ -37,7 +37,7 @@ $compileParams = @{
     }
 }
 
-task Compile @compileParams {
+function Compile  {#@compileParams
     if (Test-Path -Path $script:PsmPath) {
         Remove-Item -Path $script:PsmPath -Recurse -Force
     }
@@ -60,7 +60,7 @@ task Compile @compileParams {
 
 }
 
-task CopyPSD {
+function CopyPSD {
     New-Item -Path (Split-Path $script:PsdPath) -ItemType Directory -ErrorAction 0
     $copy = @{
         Path        = "$($script:ModuleName).psd1"
@@ -71,7 +71,7 @@ task CopyPSD {
     Copy-Item @copy
 }
 
-task CopyAdditionalFiles {
+function CopyAdditionalFiles {
 
     $CopyContainer = @{
         Container = $true
@@ -87,6 +87,7 @@ task CopyAdditionalFiles {
     & $CopyFolder 'Examples'
 
     & $CopyFile 'SeleniumClasses.ps1'
+    & $CopyFile 'SeleniumSelection.psm1'
     & $CopyFile 'Selenium-Binary-Updater.ps1'
 
     & $CopyFile 'ChangeLog.md'
@@ -95,32 +96,34 @@ task CopyAdditionalFiles {
 
 }
 
-task UpdatPublicFunctionsToExport -if (Test-Path -Path $script:PublicFolder) {
-    $publicFunctions = (Get-ChildItem -Path $script:PublicFolder |
-            Select-Object -ExpandProperty BaseName) -join "', '"
+function UpdatPublicFunctionsToExport {
+    if (Test-Path -Path $script:PublicFolder) {
+        $publicFunctions = (Get-ChildItem -Path $script:PublicFolder |
+                Select-Object -ExpandProperty BaseName) -join "', '"
 
-    $publicFunctions = "FunctionsToExport = @('{0}')" -f $publicFunctions
+        $publicFunctions = "FunctionsToExport = @('{0}')" -f $publicFunctions
 
-    (Get-Content -Path $script:PsdPath) -replace "FunctionsToExport\s*?= '\*'", $publicFunctions |
-        Set-Content -Path $script:PsdPath
+        (Get-Content -Path $script:PsdPath) -replace "FunctionsToExport\s*?= '\*'", $publicFunctions |
+            Set-Content -Path $script:PsdPath
+    }
 }
 
 
 
-task ImportCompipledModule -if (Test-Path -Path $script:PsmPath) {
+function ImportCompipledModule { #-if (Test-Path -Path $script:PsmPath) {
     Get-Module -Name $script:ModuleName |
         Remove-Module -Force
     Import-Module -Name $script:PsdPath -Force
 }
 
-task Pester {
+function Pester {
     $resultFile = "{0}\testResults{1}.xml" -f $script:OutPutFolder, (Get-date -Format 'yyyyMMdd_hhmmss')
     $testFolder = Join-Path -Path $PSScriptRoot -ChildPath 'Tests\*'
     Invoke-Pester -Path $testFolder -OutputFile $resultFile -OutputFormat NUnitxml
 }     
 
 
-task WriteStats {
+function WriteStats {
     $folders = Get-ChildItem -Directory | 
         Where-Object { $PSItem.Name -ne 'Output' }
     
@@ -135,10 +138,20 @@ task WriteStats {
     $stats | ConvertTo-Json > "$script:OutPutFolder\stats.json"
 }
 
-task UpdateHelp -if (Test-Path -Path "$Script:ModuleRoot\Help") {
-    Update-MarkdownHelpModule -Path "$Script:ModuleRoot\Help" -ModulePagePath "$Script:ModuleRoot\Help\README.MD" -RefreshModulePage
+function UpdateHelp {
+    if (Test-Path -Path "$Script:ModuleRoot\Help") {
+        Update-MarkdownHelpModule -Path "$Script:ModuleRoot\Help" -ModulePagePath "$Script:ModuleRoot\Help\README.MD" -RefreshModulePage
+    }
 }
 
-task ExportHelp -if (Test-Path -Path "$script:ModuleRoot\Help") {
-    New-ExternalHelp -Path "$script:ModuleRoot\Help" -OutputPath $script:HelpPath
+function ExportHelp {
+    if (Test-Path -Path "$script:ModuleRoot\Help") {
+        New-ExternalHelp -Path "$script:ModuleRoot\Help" -OutputPath $script:HelpPath
+    }
 }
+
+Clean
+Compile
+CopyPSD
+UpdatPublicFunctionsToExport
+CopyAdditionalFiles

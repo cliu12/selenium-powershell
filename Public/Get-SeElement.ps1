@@ -80,12 +80,20 @@ function Get-SeElement {
                     $Output = $WebDriverWait.Until($Condition) | DisplayedFilter -All:$ShowAll
                 }
                 else {
-                    $Output = $Driver.FindElements($ByCondition) | DisplayedFilter -All:$ShowAll
+                    if ($Single -eq $true) {
+                        $Output = $Driver.FindElement($ByCondition) | DisplayedFilter -All:$ShowAll
+                    } else {
+                        $Output = $Driver.FindElements($ByCondition) | DisplayedFilter -All:$ShowAll
+                    }
                 }
             }
             'ByElement' {
                 Write-Verbose "Searching an Element - Timeout ignored" 
-                $Output = $Element.FindElements($ByCondition) | DisplayedFilter -All:$ShowAll
+                if ($Single -eq $true) {
+                    $Output = $Element.FindElement($ByCondition) | DisplayedFilter -All:$ShowAll
+                } else {
+                    $Output = $Element.FindElements($ByCondition) | DisplayedFilter -All:$ShowAll
+                }
             }
         }
         

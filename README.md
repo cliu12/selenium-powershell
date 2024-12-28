@@ -2,6 +2,22 @@
 
 The Selenium PowerShell module allows you to automate browser interaction using the [Selenium API](https://selenium.dev/). You can navigate to pages, find elements, click buttons, enter text and even take screenshots. 
 
+# What's change
+- The is the port of Adam's Selenium-Powershell 4.0.0.0-Pre3, and make it work with WebDriver.dll 4.0 or later
+- Download the whole Output\Selenium folder
+- Update the binary files inside assemblies as needed
+- Import-Module "Selenium.psd1"
+
+# These are the useful links
+- [Selenium](https://www.seleniumhq.org/)
+- [Selenium Source repository](https://github.com/SeleniumHQ/selenium)
+- [Google ChromeDriver](http://chromedriver.chromium.org/)
+- [FireFox Geckodriver](https://github.com/mozilla/geckodriver)
+- [Microsoft EdgeDriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/)
+- [CSS Selctor Resource](https://www.w3schools.com/cssref/css_selectors.asp)
+- [XPath Syntax](https://www.w3schools.com/xml/xpath_syntax.asp)
+
+
 # Looking for Maintainers
 
 I haven't been able to able to keep up with the issues on this repo. If you are interested in becoming a maintainer, please let me know. - [Adam](https://github.com/adamdriscoll)
@@ -30,79 +46,79 @@ Import-Module "{FullPath}\selenium-powershell\Selenium.psd1"
 
 # Usage
 `Note: in order to use a specific driver you will need to have the brower of the driver installed on your system.
-For example if you use Start-SeChrome you will need to have either a Chrome or Chromium browser installed
+For example if you use Start-SeDriver you will need to have either a Chrome or Chromium browser installed
 `
 
 ## Start a Browser Driver
 ```powershell
 # Start a driver for a browser of your choise (Chrome/Firefox/Edge/InternetExplorer)
 # To start a Firefox Driver
-$Driver = Start-SeFirefox 
+$Driver = Start-SeDriver -Browser Firefox
 
 # To start a Chrome Driver
-$Driver = Start-SeChrome
+$Driver = Start-SeDriver -Browser Chrome
 
 # To start an Edge Driver
-$Driver = Start-SeEdge
+$Driver = Start-SeDriver -Browser Edge
 ```
 
 ## Navigate to a URL
 
 ```powershell
-$Driver = Start-SeFirefox 
-Enter-SeUrl https://www.poshud.com -Driver $Driver
+$Driver = Start-SeDriver -Browser Firefox
+Set-SeUrl -Url https://www.google.com
 ```
 
 ## Find an Element
 
 ```powershell
-$Driver = Start-SeFirefox 
-Enter-SeUrl https://www.poshud.com -Driver $Driver
-$Element = Find-SeElement -Driver $Driver -Id "myControl"
+$Driver = Start-SeDriver -Browser Firefox
+Set-SeUrl https://www.google.com
+$Element = Get-SeElement -By CssSelector -Value "textarea[name='q']"
 ```
 
 ## Click on an Element/Button
 
 ```powershell
-$Driver = Start-SeFirefox 
-Enter-SeUrl https://www.poshud.com -Driver $Driver
-$Element = Find-SeElement -Driver $Driver -Id "btnSend"
+$Driver = Start-SeDriver -Browser Firefox
+Set-SeUrl https://www.google.com
+$Element = Get-SeElement -By CssSelector -Value "textarea[name='q']"
 Invoke-SeClick -Element $Element
 ```
 
 ## Send Keystrokes
 
 ```powershell
-$Driver = Start-SeFirefox 
-Enter-SeUrl https://www.poshud.com -Driver $Driver
-$Element = Find-SeElement -Driver $Driver -Id "txtEmail"
-Send-SeKeys -Element $Element -Keys "adam@poshtools.com"
+$Driver = Start-SeDriver -Browser Firefox
+Set-SeUrl https://www.google.com
+$Element = Get-SeElement -By CssSelector -Value "textarea[name='q']"
+Invoke-SeKeys -Element $Element -Keys "Selenium{{Enter}}"
 ```
 
 ## Run Chrome with options
 
 ```powershell
 # Run Chrome in Headless mode 
-$Driver = Start-SeChrome -Headless
+$Driver = Start-SeDriver -Browser Chrome -State Headless
 
 # Run Chrome in incognito mode
-$Driver = Start-SeChrome -Incognito
+$Driver = Start-SeDriver -Browser Chrome -State PrivateBrowsing
 
 # Run Chrome with alternative download folder
-$Driver = Start-SeChrome -DefaultDownloadPath C:\Temp
+$Driver = Start-SeDriver -Browser Chrome -DefaultDownloadPath C:\Temp
 
 # Run Chrome and go to a URL in one command
-$Driver = Start-SeChrome -StartURL 'https://www.google.com/ncr'
+$Driver = Start-SeDriver -Browser Chrome -StartURL 'https://www.google.com/ncr'
 
 # Run Chrome with multiple Arguments
-$Driver = Start-SeChrome -Arguments @('Incognito','start-maximized')
+$Driver = Start-SeDriver -Browser Chrome -State PrivateBrowsing -State Maximized
 
 # Run Chrome with an existing profile.
 # The default profile paths are as follows:
 # Windows: C:\Users\<username>\AppData\Local\Google\Chrome\User Data
 # Linux: /home/<username>/.config/google-chrome
 # MacOS: /Users/<username>/Library/Application Support/Google/Chrome
-$Driver = Start-SeChrome -ProfileDirectoryPath '/home/<username>/.config/google-chrome'
+$Driver = Start-SeDriver -Browser Chrome -ProfileDirectoryPath '/home/<username>/.config/google-chrome'
 
 ```
 
