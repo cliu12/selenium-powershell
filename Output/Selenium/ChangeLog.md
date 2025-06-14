@@ -1,10 +1,14 @@
 
+# 4.0.0-preview5
+- change [OpenQA.Selenium.Remote.CapabilityType] to [OpenQA.Selenium.CapabilityType]
+
 # 4.0.0-preview4
 - Move SeleniumSelection class to SeleniumSelection.psm1
 - Update assemblies files the latest version
 - Get-SeElement -single will return single element by .FindElement instead of .FindElements
+- Get-SeElement -wait fix
 - Invoke-SeKeys will replace all "{{KeyNames}}"
-- Change Selenium.build2.ps1, task to function
+- Change Selenium.build.ps1, from task to function
 - Update Selenium.tests.ps1 to updated functions
 
 

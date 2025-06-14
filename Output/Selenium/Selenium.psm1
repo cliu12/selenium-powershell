@@ -2332,7 +2332,7 @@ function Start-SeChromeDriver {
 
         if ($AcceptInsecureCertificates) {
             Write-Verbose "AcceptInsecureCertificates capability set to: $($AcceptInsecureCertificates.IsPresent)"
-            $Options.AddAdditionalCapability([OpenQA.Selenium.Remote.CapabilityType]::AcceptInsecureCertificates, $true, $true)
+            $Options.AddAdditionalCapability([OpenQA.Selenium.CapabilityType]::AcceptInsecureCertificates, $true, $true)
         }
 
         if ($ProfilePath) {
@@ -2427,7 +2427,7 @@ function Start-SeEdgeDriver {
 
     if ($AcceptInsecureCertificates) {
         Write-Verbose "AcceptInsecureCertificates capability set to: $($AcceptInsecureCertificates.IsPresent)"
-        $Options.AddAdditionalCapability([OpenQA.Selenium.Remote.CapabilityType]::AcceptInsecureCertificates, $true, $true)
+        $Options.AddAdditionalCapability([OpenQA.Selenium.CapabilityType]::AcceptInsecureCertificates, $true, $true)
     }
  
     #region check / set paths for browser and web driver and edge options
@@ -2561,7 +2561,7 @@ function Start-SeFirefoxDriver {
 
         if ($AcceptInsecureCertificates) {
             Write-Verbose "AcceptInsecureCertificates capability set to: $($AcceptInsecureCertificates.IsPresent)"
-            $Options.AddAdditionalCapability([OpenQA.Selenium.Remote.CapabilityType]::AcceptInsecureCertificates,$true,$true)
+            $Options.AddAdditionalCapability([OpenQA.Selenium.CapabilityType]::AcceptInsecureCertificates,$true,$true)
         }
 
         if ($PrivateBrowsing) {

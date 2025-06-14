@@ -6,13 +6,15 @@
 # Generated on: 8/31/2018
 #
 # Modified James O'Neill 30 Nov 2019
+#
+# Modified by: Chao Liu, Jun 13 2025
 
 @{
     ModuleVersion        = '4.0.0'
     GUID                 = 'a3bdb8c3-c150-48a8-b56d-cd4d43f46a26'
     Author               = 'Adam Driscoll'
     CompanyName          = 'Unknown'
-    Copyright            = '(c) 2020 Adam Driscoll. All rights reserved.'
+    Copyright            = '(c) 2020 Adam Driscoll. 2025 Chao Liu. All rights reserved.'
     Description          = 'Web automation using the Selenium Web Driver'
     ScriptsToProcess     = @('SeleniumClasses.ps1')
     RootModule           = 'Selenium.psm1'
@@ -40,7 +42,7 @@
 
             # A URL to an icon representing this module.
             # IconUri = ''
-            Prerelease   = 'preview3'
+            Prerelease   = 'preview5'
         } # End of PSData hashtable
 
     } # End of PrivateData hashtable
