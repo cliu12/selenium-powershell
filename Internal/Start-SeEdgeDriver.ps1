@@ -21,7 +21,8 @@ function Start-SeEdgeDriver {
 
     if ($AcceptInsecureCertificates) {
         Write-Verbose "AcceptInsecureCertificates capability set to: $($AcceptInsecureCertificates.IsPresent)"
-        $Options.AddAdditionalCapability([OpenQA.Selenium.CapabilityType]::AcceptInsecureCertificates, $true, $true)
+        #$Options.AddAdditionalCapability([OpenQA.Selenium.CapabilityType]::AcceptInsecureCertificates, $true, $true)
+        $Options.AcceptInsecureCertificates = $true
     }
  
     #region check / set paths for browser and web driver and edge options
@@ -75,7 +76,7 @@ function Start-SeEdgeDriver {
     }
     #endregion
 
-    $Driver = [OpenQA.Selenium.Chrome.ChromeDriver]::new($service, $options)
+    $Driver = [OpenQA.Selenium.Edge.EdgeDriver]::new($service, $options)
 
     #region post driver checks and option checks If we have a version know to have problems with passing arguments, generate a warning if we tried to send any.
     if (-not $Driver) {

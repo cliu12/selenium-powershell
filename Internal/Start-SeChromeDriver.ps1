@@ -55,7 +55,8 @@ function Start-SeChromeDriver {
 
         if ($AcceptInsecureCertificates) {
             Write-Verbose "AcceptInsecureCertificates capability set to: $($AcceptInsecureCertificates.IsPresent)"
-            $Options.AddAdditionalCapability([OpenQA.Selenium.CapabilityType]::AcceptInsecureCertificates, $true, $true)
+            #$Options.AddAdditionalCapability([OpenQA.Selenium.CapabilityType]::AcceptInsecureCertificates, $true, $true)
+            $Options.AcceptInsecureCertificates = $true
         }
 
         if ($ProfilePath) {
