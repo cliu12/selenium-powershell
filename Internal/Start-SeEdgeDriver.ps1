@@ -25,42 +25,21 @@ function Start-SeEdgeDriver {
         $Options.AcceptInsecureCertificates = $true
     }
  
-    #region check / set paths for browser and web driver and edge options
-    if ($PSBoundParameters['BinaryPath'] -and -not (Test-Path -Path $BinaryPath)) {
-        throw "Could not find $BinaryPath"; return
-    }
-
-    if ($WebDriverPath -and -not (Test-Path -Path (Join-Path -Path $WebDriverPath -ChildPath 'msedgedriver.exe'))) {
-        throw "Could not find msedgedriver.exe in $WebDriverPath"; return
-    }
-    elseif ($WebDriverPath -and (Test-Path (Join-Path -Path $WebDriverPath -ChildPath 'msedge.exe'))) {
-        Write-Verbose -Message "Using browser from $WebDriverPath"
-        $Options.BinaryLocation = Join-Path -Path $WebDriverPath -ChildPath 'msedge.exe'
-    }
-    elseif ($BinaryPath) {
-        $Options.BinaryLocation = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($BinaryPath)
-        Write-Verbose -Message "Will request $($Options.BinaryLocation) as the browser"
+    if ($BinaryPath) {
+            Write-Verbose "Setting Edge Binary: $BinaryPath"
+            $Options.BinaryLocation = "$BinaryPath"
     }
 
     if ($PSBoundParameters.ContainsKey('LogLevel')) {
         Write-Warning "LogLevel parameter is not implemented for $($Options.SeParams.Browser)"
     }
 
-    if (-not $WebDriverPath -and $binaryDir -and (Test-Path (Join-Path -Path $binaryDir -ChildPath 'msedgedriver.exe'))) {
-        $WebDriverPath = $binaryDir
-    }
-    # No linux or mac driver to test for yet
-    if (-not $WebDriverPath -and (Test-Path (Join-Path -Path "$PSScriptRoot\Assemblies\" -ChildPath 'msedgedriver.exe'))) {
-        $WebDriverPath = "$PSScriptRoot\Assemblies\"
-        Write-Verbose -Message "Using Web driver from the default location"
-    }
-    
     if (-not $PSBoundParameters.ContainsKey('Service')) {
         $ServiceParams = @{}
         if ($WebDriverPath) { $ServiceParams.Add('WebDriverPath', $WebDriverPath) }
         $service = New-SeDriverService -Browser Edge @ServiceParams
     }
-    
+
     #The command line args may now be --inprivate --headless but msedge driver V81 does not pass them
     if ($PrivateBrowsing) { $options.AddArguments('InPrivate') }
     if ($State -eq [SeWindowState]::Headless) { $options.AddArguments('headless') }

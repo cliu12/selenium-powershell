@@ -1,6 +1,7 @@
 
 # 4.0.0-preview5
-- change [OpenQA.Selenium.Remote.CapabilityType] to [OpenQA.Selenium.CapabilityType]
+- Change [OpenQA.Selenium.Remote.CapabilityType] to [OpenQA.Selenium.CapabilityType]
+- Update some Edge related codes
 
 # 4.0.0-preview4
 - Move SeleniumSelection class to SeleniumSelection.psm1
