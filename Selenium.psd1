@@ -8,6 +8,7 @@
 # Modified James O'Neill 30 Nov 2019
 #
 # Modified by: Chao Liu, Jun 13 2025
+# https://github.com/cliu12/selenium-powershell
 
 @{
     ModuleVersion        = '4.0.0'
